@@ -11,8 +11,8 @@ using namespace cv;
 /** Function Headers */
 void detectAndDisplay( Mat frame );
 
+
 /** Global variables */
-//-- Note, either copy these two files from opencv/data/haarscascades to your current folder, or change these locations
 //String face_cascade_name = "haarcascade_frontalface_alt.xml";
 String face_cascade_name = "haarcascade_frontalface_default.xml";
 String profile_cascade_name = "haarcascade_profileface.xml";
@@ -25,6 +25,10 @@ string window_name = "Capture - Face detection";
 RNG rng(12345);
 
 Mat frame;
+
+
+// commit test
+//ここが変化していたら大丈夫
 
 /**
  * @function main
@@ -39,30 +43,28 @@ int main( int argc, char* argv[] )
 		frame = imread(argv[1], CV_LOAD_IMAGE_COLOR);
 	}
 
-//画像が開けなければエラー表示
+    //画像が開けなければエラー表示
 	if (frame.empty()) {
 		printf("Cannot open image\n");
 		exit (-1);
 	}
 
 
-  //-- 1. Load the cascades
-  if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
-  if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+    //-- 1. Load the cascades
+    if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+    if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
 
  
-  //-- 3. Apply the classifier to the frame
-  if( !frame.empty() )
-	 { detectAndDisplay( frame ); 
+    //-- 2. Apply the classifier to the frame
+    if( !frame.empty() ) { 
+		detectAndDisplay( frame ); 
 		//imshow("window", frame);
 		destroyAllWindows();
 	}
-   else
-	 { printf(" --(!) No captured frame -- Break!"); }
+    else { printf(" --(!) No captured frame -- Break!"); }
 
-	  return 0;
-
-}
+	return 0;
+ }
 
 
 /**
@@ -89,7 +91,7 @@ void detectAndDisplay( Mat frame )
 
 
    //-- Detect faces
-   //正面顔検出
+   //正面顔検出//
    face_cascade.detectMultiScale( frame_gray, faces, 1.11, 1, 0|CV_HAAR_SCALE_IMAGE, Size(20, 20) );
 
    //http://docs.opencv.org/modules/objdetect/doc/cascade_classification.html
@@ -99,8 +101,7 @@ void detectAndDisplay( Mat frame )
 
    
 
-   for( size_t i = 0; i < faces.size(); i++ )
-    {
+   for( size_t i = 0; i < faces.size(); i++ ) {
 	  //Point  x と y によって指定される 2 次元の点を表現するクラス
       Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
 	  //楕円の描画
@@ -119,7 +120,7 @@ void detectAndDisplay( Mat frame )
 
 	
 
-   //横顔検出
+   //横顔検出//
    Mat faceROI = frame_gray;
 
    std::vector<Rect> profiles;
@@ -127,8 +128,7 @@ void detectAndDisplay( Mat frame )
    //-- In each face, detect profiles
    profiles_cascade.detectMultiScale( faceROI, profiles, 1.11, 0, 0 |CV_HAAR_SCALE_IMAGE, Size(20, 20) );
 
-   for( size_t j = 0; j < profiles.size(); j++ )
-    {
+   for( size_t j = 0; j < profiles.size(); j++ ) {
       Point profile_center( profiles[j].x + profiles[j].width/2, profiles[j].y + profiles[j].height/2 );
 	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 4, 0 );
 
@@ -141,9 +141,9 @@ void detectAndDisplay( Mat frame )
 
 	  //番号の描画
 	  putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 0), 1, 4, false);
-       }
+   }
  
    //-- Show what you got
    imshow( window_name, frame );
-	waitKey(0);
+   waitKey(0);
 }
