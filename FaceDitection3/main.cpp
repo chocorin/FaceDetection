@@ -35,7 +35,7 @@ int main( int argc, char* argv[] )
 	//入力画像の読み込み　引数がなければサンプル画像を読み込む
 	if (argc < 2) {
 		//frame = imread("P1120221.JPG", CV_LOAD_IMAGE_COLOR);
-		frame = imread("obama_1_0008.bmp", CV_LOAD_IMAGE_COLOR);
+		frame = imread("obama_1_0052.bmp", CV_LOAD_IMAGE_COLOR);
 	}
 	else {
 		frame = imread(argv[1], CV_LOAD_IMAGE_COLOR);
@@ -90,7 +90,7 @@ void detectAndDisplay( Mat frame )
 
    //-- Detect faces
    //正面顔検出//
-   face_cascade.detectMultiScale( frame_gray, faces, 1.11, 4, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+   face_cascade.detectMultiScale( frame_gray, faces, 1.200191, 0, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50) );
 
    //http://docs.opencv.org/modules/objdetect/doc/cascade_classification.html
    //detectMultiScale(const Mat& image, vector<Rect>& objects, double scaleFactor=1.1, int minNeighbors=3, int flags=0, Size minSize=Size(), Size maxSize=Size())
@@ -98,21 +98,20 @@ void detectAndDisplay( Mat frame )
    //minNeighbors 最低矩形数
 
    
-
    for( size_t i = 0; i < faces.size(); i++ ) {
-	  //Point  x と y によって指定される 2 次元の点を表現するクラス
-      Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
-	  //楕円の描画
-      //ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 255, 0, 255 ), 1, 4, 0 );
-	  
+ 	  //Point  x と y によって指定される 2 次元の点を表現するクラス
+       Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+ 	  //楕円の描画
+       //ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 255, 0, 255 ), 1, 4, 0 );
+ 	  
 	  //矩形の描画
 	  //個々の検出領域を表す変数
-	  vector<Rect>::const_iterator r;
+	    vector<Rect>::const_iterator r;
       //検出領域の一つ一つに対するループ処理
-	  for( r = faces.begin();  r != faces.end(); r++ ) {
+	    for( r = faces.begin();  r != faces.end(); r++ ) {
 
-		Point pt1; //領域の始点
-		Point pt2; //領域の終点
+		  Point pt1; //領域の始点
+		  Point pt2; //領域の終点
 
       //得られた結果をもとに、領域の始点と終点を計算
 		pt1.x = r->x;
@@ -122,38 +121,53 @@ void detectAndDisplay( Mat frame )
 
       //検出した領域にあわせて矩形を描く
 		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 1, 4, 0 );
+       }
+
+ 	  //数値から文字列に変換
+ 	  //std::to_string
+ 	  string num_str = to_string(i+1);
+ 
+ 	  //番号の描画する場所
+ 	  Point number( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 - 30 );
+ 
+ 	  //番号の描画
+ 	  putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 0, 255), 1, 4, false);
+
+	  //矩形描画てすと
+	  //rectangle( frame, Point(201, 93), Point(276, 168), Scalar(255, 0, 0), 1, 4, 0);
+    }
+
+  
 
 		//矩形描写座標の取得
 		//if( i = faces.size() - 1) {
-			printf("i=%d;\n", i);
-			int pt1_x = pt1.x;	
-			printf("pt1_x=%d;\n",pt1_x);
-			int pt1_y = pt1.y;	
-			printf("pt1_y=%d;\n",pt1_y);
-			int pt2_x = pt2.x;	
-			printf("pt2_x=%d;\n",pt2_x);
-			int pt2_y = pt2.y;	
-			printf("pt2_y=%d;\n",pt2_y);
-			//obama_1_0008.bmp出力結果
+		//	printf("i=%d;\n", i);
+		//	int pt1_x = pt1.x;	
+		//	printf("pt1_x=%d;\n",pt1_x);
+		//	int pt1_y = pt1.y;	
+		//	printf("pt1_y=%d;\n",pt1_y);
+		//	int pt2_x = pt2.x;	
+		//	printf("pt2_x=%d;\n",pt2_x);
+		//	int pt2_y = pt2.y;	
+		//	printf("pt2_y=%d;\n",pt2_y);
+			//obama_1_0008.bmp出力結果（矩形数4, 30*30）
 			//Point(209, 100) Point(263, 154);d
+			//Size(54, 54)
+			//obama_1_0022.bmp出力結果(矩形数0に変更, 30*30)
+			//Point(201, 93) Point(257, 149);d
+			//Size(56, 56)
+			//顎の部分が切れているので実際はy軸正方向に長さが足りないと思われたが、正方形に検出するので、
+			//Size(75, 75)だと大幅にずれてしまう
+			//Point(201, 93), Point(257, 168)
+			//Size(56, 75)
+			//obama_1_0052.bmp出力結果(矩形数0に変更, 50*50, 縮小量1.2)
+			//2番目に検出
+			//Point(209, 118), Point(258, 167)
+			//Size(49, 49)
+			//縮小量を1.200192に変更すると1番目に検出可能
+			//この条件では obama_1_0022.bmp は検出不可、縮小量を1.11に変更することで検出可能
 		//}	
-	  }
-
-	  //数値から文字列に変換
-	  //std::to_string
-	  string num_str = to_string(i+1);
-
-	  //番号の描画する場所
-	  Point number( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 - 30 );
-
-	  //番号の描画
-	  putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 0, 255), 1, 4, false);
-
-	  //矩形描画てすと
-	  //rectangle( frame, Point(861, 160), Point(898, 197), Scalar(255, 0, 0), 1, 4, 0);
-
-
-   }
+	
 
 	
 
@@ -163,21 +177,21 @@ void detectAndDisplay( Mat frame )
    std::vector<Rect> profiles;
 
    //-- In each face, detect profiles
-   profiles_cascade.detectMultiScale( faceROI, profiles, 1.11, 0, 0 |CV_HAAR_SCALE_IMAGE, Size(20, 20) );
+   profiles_cascade.detectMultiScale( faceROI, profiles, 1.05, 0, 0 |CV_HAAR_SCALE_IMAGE, Size(40, 40) );
 
    for( size_t j = 0; j < profiles.size(); j++ ) {
       Point profile_center( profiles[j].x + profiles[j].width/2, profiles[j].y + profiles[j].height/2 );
-	  //ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 4, 0 );
+	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 4, 0 );
 
 	   //数値から文字列に変換
 	  //std::to_string
 	  string num_str = to_string(j+1);
 
 	  //番号の描画する場所
-	 //Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 30);
+	 Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 30);
 
 	  //番号の描画
-	  //putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 0), 1, 4, false);
+	  putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 0), 1, 4, false);
    }
  
    //-- Show what you got
