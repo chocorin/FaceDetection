@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <string.h>
 
 using namespace std;
 using namespace cv;
@@ -35,21 +36,63 @@ int main( int argc, char* argv[] )
 	VideoCapture cap;
 	Mat frame;
 
-	//-- 1. Load the cascades
-    if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
-    if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+	// 検出器の読み込み
+	if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+	if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
 
-	//入力動画の読み込み　引数がなければサンプル動画を読み込む
+
+	// 入力動画の読み込み　引数がなければサンプル動画を読み込む
 	if (argc < 2) {
 		cap.open("spe_2010_0127_obama_5.avi");
 	}
 	else {
-		cap.open(argv[1]);
+		// 動画か画像かの判別
+		// ファイル名から拡張子を strtok で分割して取り出す
+		string org_filename;
+		org_filename = argv[1];
+		char *name, *extention;
+
+	    /* 1回目の呼出し */
+		name = strtok(argv[1], ".");
+
+		/* 2回目以降の呼出し */
+		extention = strtok(NULL, ".");
+
+		printf("name: %s\n", name);
+		printf("extention: %s\n", extention);
+		printf("argv[1]: %s\n", argv[1]);
+		printf("original Filename: %s\n", org_filename);
+
+		string ext = extention;
+
+		// 拡張子が .avi : 動画読み込み
+		if(ext == "avi") {
+			printf("movie success \n");
+			cap.open(org_filename);
+			//動画が開けなければエラー表示
+			if(!cap.isOpened()) {
+			printf("Cannot open avi movie. Please check your file's extention. \n");
+			exit (-1);
+			}
+		}
+
+		// 拡張子が .bmp : 画像読み込み
+		if(ext == "bmp") {
+			printf("picture success \n");
+			frame = imread("obama_1_0008.bmp", CV_LOAD_IMAGE_COLOR);
+
+			//画像が開けなければエラー表示
+			if(!cap.isOpened()) {
+			printf("Cannot open bmp picture. Please check your file's extention. \n");
+			exit (-1);
+			}
+		}
+
 	}
 
-    //動画が開けなければエラー表示
+    //何も動画像が開けなければエラー表示
 	if(!cap.isOpened()) {
-		printf("Cannot open movie\n");
+		printf("Cannot open anything. \n");
 		exit (-1);
 	}
 
