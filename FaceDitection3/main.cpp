@@ -69,10 +69,28 @@ int main( int argc, char* argv[] )
 		if(ext == "avi") {
 			printf("movie success \n");
 			cap.open(org_filename);
-			//動画が開けなければエラー表示
-			if(!cap.isOpened()) {
-			printf("Cannot open avi movie. Please check your file's extention. \n");
-			exit (-1);
+			// 動画が読み込まれた場合の処理
+			// 動画が開けなければエラー表示
+			if(cap.isOpened()) {
+				for(;;) {
+					// 動画ファイルから1フレーム分の画像データを取得して、変数frameに格納する
+					cap >> frame;
+
+					// 画像データ取得に失敗したらループを抜ける
+					if (!frame.empty()) {
+						detectAndDisplay( frame );
+						imshow("window", frame);
+					}
+					else
+						break;
+
+					// 取得した画像データをウィンドウ表示する
+					if(waitKey(30) >= 0) break;
+				}
+			}
+			else {
+				printf("Cannot open avi movie. Please check your file's extention. \n");
+				exit (-1);
 			}
 		}
 
@@ -80,64 +98,28 @@ int main( int argc, char* argv[] )
 		if(ext == "bmp") {
 			printf("picture success \n");
 			frame = imread("obama_1_0008.bmp", CV_LOAD_IMAGE_COLOR);
-
-			//画像が開けなければエラー表示
-			if(!cap.isOpened()) {
-			printf("Cannot open bmp picture. Please check your file's extention. \n");
-			exit (-1);
+			// 画像が読み込まれた場合の処理
+			// 画像が開けなければエラー表示	
+			if( !frame.empty() ) { 
+				detectAndDisplay( frame ); 
+				imshow("window", frame);
+				waitKey(0);
+				destroyAllWindows();
+			}
+			else { 
+				printf("Cannot open bmp picture. Please check your file's extention. \n"); 
+				exit(-1);
 			}
 		}
-
 	}
 
-    //何も動画像が開けなければエラー表示
-	if(!cap.isOpened()) {
-		printf("Cannot open anything. \n");
-		exit (-1);
-	}
-
-
-	//入力画像の読み込み　引数がなければサンプル画像を読み込む
-	//if (argc < 2) {
-		//frame = imread("P1120221.JPG", CV_LOAD_IMAGE_COLOR);
-		//frame = imread("obama_1_0052.bmp", CV_LOAD_IMAGE_COLOR);
-	//}
-	//else {
-	//	frame = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+	//何も動画像が開けなければエラー表示
+	//if(!cap.isOpened()) {
+	//	printf("Cannot open anything. \n");
+	//	exit (-1);
 	//}
 
-    //画像が開けなければエラー表示
-	//if (frame.empty()) {
-		//printf("Cannot open image\n");
-		//exit (-1);
-	//}
-
-
-	for(;;) {
-    // （3）動画ファイルから1フレーム分の画像データを取得して、変数frameに格納する
-    cap >> frame;
-
-    // 画像データ取得に失敗したらループを抜ける
-    if (!frame.empty()) {
-		detectAndDisplay( frame );
-		imshow("window", frame);
-	}
-	else
-		break;
-
-    // 取得した画像データをウィンドウ表示する
-    
-    if(waitKey(30) >= 0) break;
-    }
 	return 0;
- 
-    //-- 2. Apply the classifier to the frame
-    //if( !frame.empty() ) { 
-		//detectAndDisplay( frame ); 
-		//imshow("window", frame);
-		//destroyAllWindows();
-	//}
-    //else { printf(" --(!) No captured frame -- Break!"); }
  }
 
 
@@ -176,26 +158,25 @@ void detectAndDisplay( Mat frame )
    
    for( size_t i = 0; i < faces.size(); i++ ) {
  	  //Point  x と y によって指定される 2 次元の点を表現するクラス
-       Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+      Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
  	  //楕円の描画
-       //ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 255, 0, 255 ), 1, 4, 0 );
+      //ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 255, 0, 255 ), 1, 4, 0 );
  	  
 	  //矩形の描画
 	  //個々の検出領域を表す変数
-	    vector<Rect>::const_iterator r;
+	  vector<Rect>::const_iterator r;
       //検出領域の一つ一つに対するループ処理
-	    for( r = faces.begin();  r != faces.end(); r++ ) {
-
+	  for( r = faces.begin();  r != faces.end(); r++ ) {
 		  Point pt1; //領域の始点
 		  Point pt2; //領域の終点
 
-      //得られた結果をもとに、領域の始点と終点を計算
+		//得られた結果をもとに、領域の始点と終点を計算
 		pt1.x = r->x;
 		pt1.y = r->y;
 		pt2.x = r->x + r->width - 1;
 		pt2.y = r->y + r->height - 1;
 
-      //検出した領域にあわせて矩形を描く
+		//検出した領域にあわせて矩形を描く
 		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 1, 4, 0 );
        }
 
