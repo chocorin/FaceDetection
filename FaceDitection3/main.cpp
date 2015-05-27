@@ -32,14 +32,26 @@ RNG rng(12345);
  */
 int main( int argc, char* argv[] )
 {
-	//入力動画の読み込み
-	VideoCapture cap("spe_2010_0127_obama_5.avi");
-
-	//読み込みがきちんとできているかのチェック
-	if(!cap.isOpened())
-		return -1;
-
+	VideoCapture cap;
 	Mat frame;
+
+	//-- 1. Load the cascades
+    if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+    if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+
+	//入力動画の読み込み　引数がなければサンプル動画を読み込む
+	if (argc < 2) {
+		cap.open("spe_2010_0127_obama_5.avi");
+	}
+	else {
+		cap.open(argv[1]);
+	}
+
+    //動画が開けなければエラー表示
+	if(!cap.isOpened()) {
+		printf("Cannot open movie\n");
+		exit (-1);
+	}
 
 
 	//入力画像の読み込み　引数がなければサンプル画像を読み込む
@@ -58,18 +70,14 @@ int main( int argc, char* argv[] )
 	//}
 
 
-    //-- 1. Load the cascades
-    if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
-    if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
-
 	for(;;) {
     // （3）動画ファイルから1フレーム分の画像データを取得して、変数frameに格納する
     cap >> frame;
 
     // 画像データ取得に失敗したらループを抜ける
     if (!frame.empty()) {
-		//detectAndDisplay( frame );
-		//imshow("window", frame);
+		detectAndDisplay( frame );
+		imshow("window", frame);
 	}
 	else
 		break;
@@ -83,12 +91,10 @@ int main( int argc, char* argv[] )
     //-- 2. Apply the classifier to the frame
     //if( !frame.empty() ) { 
 		//detectAndDisplay( frame ); 
-		////imshow("window", frame);
+		//imshow("window", frame);
 		//destroyAllWindows();
 	//}
     //else { printf(" --(!) No captured frame -- Break!"); }
-
-	return 0;
  }
 
 
@@ -222,6 +228,6 @@ void detectAndDisplay( Mat frame )
    }
  
    //-- Show what you got
-   imshow( window_name, frame );
+   //imshow( window_name, frame );
    //waitKey(0);
 }
