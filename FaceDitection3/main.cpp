@@ -170,20 +170,6 @@ void detectAndDisplay( Mat frame )
 		  Point pt1; //領域の始点
 		  Point pt2; //領域の終点
 
-		  Point pt11;
-		  Point pt21;
-
-		  Point pt12;
-		  Point pt22;
-
-		  Point pt13;
-		  Point pt23;
-
-		  Point pt14;
-		  Point pt24;
-
-
-
 		//得られた結果をもとに、領域の始点と終点を計算
 		pt1.x = r->x;
 		pt1.y = r->y;
@@ -256,6 +242,10 @@ void detectAndDisplay( Mat frame )
 
    for( size_t j = 0; j < profiles.size(); j++ ) {
       Point profile_center( profiles[j].x + profiles[j].width/2, profiles[j].y + profiles[j].height/2 );
+
+	  //楕円の描画
+	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 5, 8, 0 );
+	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 255, 255 ), 3, 8, 0 );
 	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 8, 0 );
 
 	   //数値から文字列に変換
