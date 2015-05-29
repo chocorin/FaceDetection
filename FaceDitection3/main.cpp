@@ -160,7 +160,7 @@ void detectAndDisplay( Mat frame )
  	  //Point  x と y によって指定される 2 次元の点を表現するクラス
       Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
  	  //楕円の描画
-      //ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 255, 0, 255 ), 1, 4, 0 );
+      //ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2), 0, 0, 360, Scalar( 255, 0, 255 ), 1, 8, 0 );
  	  
 	  //矩形の描画
 	  //個々の検出領域を表す変数
@@ -170,6 +170,20 @@ void detectAndDisplay( Mat frame )
 		  Point pt1; //領域の始点
 		  Point pt2; //領域の終点
 
+		  Point pt11;
+		  Point pt21;
+
+		  Point pt12;
+		  Point pt22;
+
+		  Point pt13;
+		  Point pt23;
+
+		  Point pt14;
+		  Point pt24;
+
+
+
 		//得られた結果をもとに、領域の始点と終点を計算
 		pt1.x = r->x;
 		pt1.y = r->y;
@@ -177,7 +191,11 @@ void detectAndDisplay( Mat frame )
 		pt2.y = r->y + r->height - 1;
 
 		//検出した領域にあわせて矩形を描く
-		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 1, 4, 0 );
+		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 5, 8, 0 );
+
+		rectangle( frame, pt1, pt2, CV_RGB(255, 255, 255), 3, 8, 0 );
+
+		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
        }
 
  	  //数値から文字列に変換
@@ -188,10 +206,10 @@ void detectAndDisplay( Mat frame )
  	  Point number( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 - 30 );
  
  	  //番号の描画
- 	  putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 1, Scalar(0, 0, 255), 1, 4, false);
+ 	  putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 1, 8, 0);
 
 	  //矩形描画てすと
-	  //rectangle( frame, Point(201, 93), Point(276, 168), Scalar(255, 0, 0), 1, 4, 0);
+	  //rectangle( frame, Point(201, 93), Point(276, 168), Scalar(255, 0, 0), 1, 8, 0);
     }
 
   
@@ -238,7 +256,7 @@ void detectAndDisplay( Mat frame )
 
    for( size_t j = 0; j < profiles.size(); j++ ) {
       Point profile_center( profiles[j].x + profiles[j].width/2, profiles[j].y + profiles[j].height/2 );
-	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 4, 0 );
+	  ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 8, 0 );
 
 	   //数値から文字列に変換
 	  //std::to_string
@@ -248,7 +266,7 @@ void detectAndDisplay( Mat frame )
 	 Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 30);
 
 	  //番号の描画
-	  putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 0), 1, 4, false);
+	  putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 0), 1, 8, 0);
    }
  
    //-- Show what you got
