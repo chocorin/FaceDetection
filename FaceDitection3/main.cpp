@@ -167,14 +167,26 @@ void detectAndDisplay( Mat frame )
 	  vector<Rect>::const_iterator r;
       //検出領域の一つ一つに対するループ処理
 	  for( r = faces.begin();  r != faces.end(); r++ ) {
-		  Point pt1; //領域の始点
-		  Point pt2; //領域の終点
+		Point pt1; //領域の始点
+		Point pt2; //領域の終点
 
 		//得られた結果をもとに、領域の始点と終点を計算
 		pt1.x = r->x;
 		pt1.y = r->y;
 		pt2.x = r->x + r->width - 1;
 		pt2.y = r->y + r->height - 1;
+
+		//中心座標の算出
+		Point cpt;
+		cpt.x = (pt1.x + pt2.x)/2;
+		cpt.y = (pt1.y + pt2.y)/2;
+
+		//矩形半径の算出
+		Point length;
+		length.x = (pt2.x - cpt.x);
+		length.y = (pt2.y - cpt.y);
+
+		//矩形半径の領域内に
 
 		//検出した領域にあわせて矩形を描く
 		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 5, 8, 0 );
@@ -189,10 +201,10 @@ void detectAndDisplay( Mat frame )
  	  string num_str = to_string(i+1);
  
  	  //番号の描画する場所
- 	  Point number( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 - 30 );
+ 	  Point number( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 - 60 );
  
  	  //番号の描画
- 	  putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 1, 8, 0);
+ 	  putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 2, 8, 0);
 
 	  //矩形描画てすと
 	  //rectangle( frame, Point(201, 93), Point(276, 168), Scalar(255, 0, 0), 1, 8, 0);
@@ -253,10 +265,10 @@ void detectAndDisplay( Mat frame )
 	  string num_str = to_string(j+1);
 
 	  //番号の描画する場所
-	 Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 30);
+	 Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 60);
 
 	  //番号の描画
-	  putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 0), 1, 8, 0);
+	  putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 0), 2, 8, 0);
    }
  
    //-- Show what you got
