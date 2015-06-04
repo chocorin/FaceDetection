@@ -12,6 +12,7 @@ using namespace cv;
 /** Function Headers */
 void detectAndDisplay( Mat frame );
 
+void drawFace(cv::Mat image, vector<Rect> *faces, int flag);
 
 /** Global variables */
 //String face_cascade_name = "haarcascade_frontalface_alt.xml";
@@ -36,11 +37,41 @@ int main( int argc, char* argv[] )
 	VideoCapture cap;
 	Mat frame;
 
+	string fileName;
+
+#if 1
+	fileName = "spe_2010_0127_obama_5.avi";
+#else
+	fileName = argv[1];
+#endif
+
 	// 検出器の読み込み
 	if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
 	if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
 
+	printf("movie success \n");
+	cap.open(fileName);
+	// 動画が読み込まれた場合の処理
+	// 動画が開けなければエラー表示
+	if(cap.isOpened()) {
+		for(;;) {
+			// 動画ファイルから1フレーム分の画像データを取得して、変数frameに格納する
+			cap >> frame;
 
+			// 画像データ取得に失敗したらループを抜ける
+			if (!frame.empty()) {
+				detectAndDisplay( frame );
+				imshow("window", frame);
+			}
+			else
+				break;
+
+			// 取得した画像データをウィンドウ表示する
+			if(waitKey(30) >= 0) break;
+		}
+	}
+
+	/*
 	// 入力動画の読み込み　引数がなければサンプル動画を読み込む
 	if (argc < 2) {
 		cap.open("spe_2010_0127_obama_5.avi");
@@ -52,16 +83,16 @@ int main( int argc, char* argv[] )
 		org_filename = argv[1];
 		char *name, *extention;
 
-		/* 1回目の呼出し */
+		// 1回目の呼出し
 		name = strtok(argv[1], ".");
 
-		/* 2回目以降の呼出し */
+		// 2回目以降の呼出し
 		extention = strtok(NULL, ".");
 
 		printf("name: %s\n", name);
 		printf("extention: %s\n", extention);
 		printf("argv[1]: %s\n", argv[1]);
-		printf("original Filename: %s\n", org_filename);
+		//printf("original Filename: %s\n", org_filename);
 
 		string ext = extention;
 
@@ -94,10 +125,10 @@ int main( int argc, char* argv[] )
 			}
 		}
 
-		// 拡張子が .bmp : 画像読み込み
-		if(ext == "bmp") {
+		// 拡張子が .jpg : 画像読み込み
+		if(ext == "jpg") {
 			printf("picture success \n");
-			frame = imread("obama_1_0008.bmp", CV_LOAD_IMAGE_COLOR);
+			frame = imread(org_filename, CV_LOAD_IMAGE_COLOR);
 			// 画像が読み込まれた場合の処理
 			// 画像が開けなければエラー表示	
 			if( !frame.empty() ) { 
@@ -107,11 +138,16 @@ int main( int argc, char* argv[] )
 				destroyAllWindows();
 			}
 			else { 
-				printf("Cannot open bmp picture. Please check your file's extention. \n"); 
+				printf("Cannot open picture. Please check your file's extention. \n"); 
 				exit(-1);
 			}
 		}
+		//else {
+		//	printf("Cannot open picture. Please check your file's extention. \n"); 
+		//	exit(-1);
+		//}
 	}
+	*/
 
 	//何も動画像が開けなければエラー表示
 	//if(!cap.isOpened()) {
@@ -120,14 +156,14 @@ int main( int argc, char* argv[] )
 	//}
 
 	return 0;
-	}
+}
 
 
-	/**
-	* @function detectAndDisplay
-	*/
-	void detectAndDisplay( Mat frame )
-	{
+/**
+* @function detectAndDisplay
+*/
+void detectAndDisplay(Mat frame)
+{
 	std::vector<Rect> faces;
 	//std::vector<型> オブジェクト名
 
@@ -148,93 +184,87 @@ int main( int argc, char* argv[] )
 
 	//-- Detect faces
 	//正面顔検出//
-	face_cascade.detectMultiScale( frame_gray, faces, 1.1, 4, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50) );
+	face_cascade.detectMultiScale( frame_gray, faces, 1.1, 0, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50) );
 
 	//http://docs.opencv.org/modules/objdetect/doc/cascade_classification.html
 	//detectMultiScale(const Mat& image, vector<Rect>& objects, double scaleFactor=1.1, int minNeighbors=3, int flags=0, Size minSize=Size(), Size maxSize=Size())
 	//scaleFactor –各画像スケールにおける縮小量
 	//minNeighbors 最低矩形数
 
-   
-	for( size_t i = 0; i < faces.size(); i++ ) {
-		Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+	drawFace(frame, &faces, 1);
 
+	if(faces.size() > 0)
+	{
+		for(size_t i = 0; i < (int)faces.size() -1; i++)
+		{
+			if(faces[i].width < 0)
+				continue;
+
+			for(size_t j = i+1; j < (int)faces.size() ; j++)
+			{
+				if(faces[j].width < 0)
+					continue;
+				if(
+					faces[i].x + faces[i].width > faces[j].x - faces[j].width ||
+					faces[i].x - faces[i].width < faces[j].x + faces[j].width ||
+					faces[i].y + faces[i].width > faces[j].y - faces[j].width ||
+					faces[i].y - faces[i].width < faces[j].y + faces[j].width
+					)
+
+					faces[j].width = -1;
+			}	// for(j)
+		}	// for(i)
+	}
+
+	drawFace(frame, &faces, 2);
+
+	/*
+	//ソートをする
+	int temp;
+	for(size_t i = 0; i < faces.size() -1; i++){
+		for( size_t j = faces.size() - 1; j > i; j-- ) {
+			if (faces[j - 1].x > faces[j].x) {  // 前の要素の方が大きかったら
+				temp = faces[j].x;        // 交換する
+				faces[j].x = faces[j - 1].x;
+				faces[j - 1].x = temp;
+				}
+			}
+	}
+	*/
+
+	//座標取得
+	for( size_t i = 0; i < faces.size(); i++ )
+	{
+		printf("i=%d;\n", i);
+		printf("faces[i].x=%d\t\n", faces[i].x);
 		Point pt1;
 		Point pt2;
 
 		pt1.x = faces[i].x;
 		pt1.y = faces[i].y;
 		pt2.x = faces[i].x + faces[i].width - 1;
-		pt2.y = faces[i].y +faces[i].height - 1;
-
+		pt2.y = faces[i].y + faces[i].height - 1;
 
 		//中心座標の算出
-		Point cpt;
-		cpt.x = (pt1.x + pt2.x)/2;
-		cpt.y = (pt1.y + pt2.y)/2;
+		Point cpt1;
+		//coordinates[i].x = (pt1.x + pt2.x)/2;
+		//cpt1.y = (pt1.y + pt2.y)/2;
 
 		//矩形半径の算出
-		Point length;
-		length.x = (pt2.x - cpt.x);
-		length.y = (pt2.y - cpt.y);
+		int rad1;
+		rad1 = (pt2.x - cpt1.x);
 
-		//矩形半径の領域内に
+		//if( i == 2 ) {
+		//	faces[i].height = -1;
+		//}
 
-		//検出した領域にあわせて矩形を描く
-		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 5, 8, 0 );
+		//中心座標の描画
+		//circle( frame, cpt, 4, CV_RGB(200, 255, 255), -1);
 
-		rectangle( frame, pt1, pt2, CV_RGB(255, 255, 255), 3, 8, 0 );
+		//矩形半径の描画
+		//line( frame, pt2, cpt, CV_RGB(200, 255, 255), 3, 8, 0);
+	}
 
-		rectangle( frame, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
-
-
-		//数値から文字列に変換
-		//std::to_string
-		string num_str = to_string(i+1);
- 
-		//番号の描画する場所
-		Point number( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 - 60 );
- 
-		//番号の描画
-		putText( frame, num_str, number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 2, 8, 0);
-
-		//矩形描画てすと
-		//rectangle( frame, Point(201, 93), Point(276, 168), Scalar(255, 0, 0), 1, 8, 0);
-		}
-
-  
-
-		//矩形描写座標の取得
-		//if( i = faces.size() - 1) {
-		//	printf("i=%d;\n", i);
-		//	int pt1_x = pt1.x;	
-		//	printf("pt1_x=%d;\n",pt1_x);
-		//	int pt1_y = pt1.y;	
-		//	printf("pt1_y=%d;\n",pt1_y);
-		//	int pt2_x = pt2.x;	
-		//	printf("pt2_x=%d;\n",pt2_x);
-		//	int pt2_y = pt2.y;	
-		//	printf("pt2_y=%d;\n",pt2_y);
-			//obama_1_0008.bmp出力結果（矩形数4, 30*30）
-			//Point(209, 100) Point(263, 154);d
-			//Size(54, 54)
-			//obama_1_0022.bmp出力結果(矩形数0に変更, 30*30)
-			//Point(201, 93) Point(257, 149);d
-			//Size(56, 56)
-			//顎の部分が切れているので実際はy軸正方向に長さが足りないと思われたが、正方形に検出するので、
-			//Size(75, 75)だと大幅にずれてしまう
-			//Point(201, 93), Point(257, 168)
-			//Size(56, 75)
-			//obama_1_0052.bmp出力結果(矩形数0に変更, 50*50, 縮小量1.2)
-			//2番目に検出
-			//Point(209, 118), Point(258, 167)
-			//Size(49, 49)
-			//縮小量を1.200192とか1.2001918に変更すると1番目に検出可能
-			//この条件では obama_1_0022.bmp は検出不可、縮小量を1.11に変更することで検出可能
-		//}	
-	
-
-	
 
 	//横顔検出//
 	Mat faceROI = frame_gray;
@@ -266,4 +296,51 @@ int main( int argc, char* argv[] )
 	//-- Show what you got
 	//imshow( window_name, frame );
 	//waitKey(0);
+}
+
+
+// 矩形描画関数
+void drawFace(cv::Mat image, vector<Rect> *faces, int flag)
+{
+	for(size_t i=0; i<(int)faces->size(); i++ )
+	{
+		if(faces->at(i).width != -1)
+		{
+			Point pt1;
+			Point pt2;
+
+			pt1.x = faces->at(i).x;
+			pt1.y = faces->at(i).y;
+			pt2.x = faces->at(i).x + faces->at(i).width - 1;
+			pt2.y = faces->at(i).y + faces->at(i).height - 1;
+
+			// 数値から文字列に変換
+			char c_str[256];
+
+			sprintf(c_str, "%d", i+1);
+ 
+			//番号の描画する場所
+			Point number(faces->at(i).x + faces->at(i).width/2, faces->at(i).y + faces->at(i).height/2 - 60 );
+
+			switch (flag)
+			{
+			case 1:
+				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
+
+				break;
+
+			case 2:
+
+				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 5, 8, 0 );
+
+				rectangle(image, pt1, pt2, CV_RGB(255, 255, 255), 3, 8, 0 );
+
+				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
+
+				// 番号の描画
+				putText(image, c_str, number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 2, 8, 0);
+				break;
+			}	// swtich(flag)
+		}
+	}	// for(i)
 }
