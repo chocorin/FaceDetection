@@ -184,7 +184,7 @@ void detectAndDisplay(Mat frame)
 
 	//-- Detect faces
 	//正面顔検出//
-	face_cascade.detectMultiScale( frame_gray, faces, 1.1, 0, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50) );
+	face_cascade.detectMultiScale( frame_gray, faces, 1.1, 3, 0|CV_HAAR_SCALE_IMAGE, Size(50, 50) );
 
 	//http://docs.opencv.org/modules/objdetect/doc/cascade_classification.html
 	//detectMultiScale(const Mat& image, vector<Rect>& objects, double scaleFactor=1.1, int minNeighbors=3, int flags=0, Size minSize=Size(), Size maxSize=Size())
@@ -199,19 +199,56 @@ void detectAndDisplay(Mat frame)
 		{
 			if(faces[i].width < 0)
 				continue;
-
+			//顔があると思われない範囲に検出した場合は太枠表示をしない
+			if(
+				//x軸
+				faces[i].x < 190 ||
+				faces[i].x > 240 ||
+				//y軸
+				faces[i].y < 93 ||
+				faces[i].y > 150 ||
+				(faces[i].y + faces[i].height -1 )  > 195
+				)
+				faces[i].width = -1;
+			
 			for(size_t j = i+1; j < (int)faces.size() ; j++)
 			{
 				if(faces[j].width < 0)
 					continue;
 				if(
-					faces[i].x + faces[i].width > faces[j].x - faces[j].width ||
+					//x軸
+					faces[j].x < 190  ||
+					faces[j].x > 240 ||
+					//y軸
+					faces[j].y < 93 ||
+					faces[j].y > 150 ||
+					(faces[j].y + faces[j].height -1 )   > 195
+					)
+					faces[j].width = -1;
+				//矩形範囲内に重複して検出した場合は太枠表示をしない
+				//if(
+					//完全に重複した場合
+					//x軸
+					//faces[i].x <  faces[j].x || faces[j].x < faces[i].x + faces[i].width - 1 ||
+					//faces[i].x <  faces[j].x + faces[j].width - 1 || faces[j].x + faces[j].width - 1 < faces[i].x + faces[i].width - 1 ||
+					//y軸
+					//faces[i].y <  faces[j].y || faces[j].y < faces[i].y + faces[i].height - 1 ||
+					//faces[i].y <  faces[j].y + faces[j].height - 1 || faces[j].y + faces[j].height - 1 < faces[i].y + faces[i].height - 1
+					//半分重複した場合
+					//x軸
+					//faces[i].x <  faces[j].x || faces[j].x < faces[i].x + (faces[i].width/2) - 1 ||
+					//faces[i].x <  faces[j].x + faces[j].width - 1 || faces[j].x + faces[j].width - 1 < faces[i].x + (faces[i].width/2) - 1 ||
+					//y軸
+					//faces[i].y <  faces[j].y || faces[j].y < faces[i].y + (faces[i].height/2) - 1 ||
+					//faces[i].y <  faces[j].y + faces[j].height - 1 || faces[j].y + faces[j].height - 1 < faces[i].y + (faces[i].height/2) - 1
+					/*齊藤先生が書いたもの
+					faces[i].x + ((faces[i].width/2) > faces[j].x - (faces[j].width/2) ||
 					faces[i].x - faces[i].width < faces[j].x + faces[j].width ||
 					faces[i].y + faces[i].width > faces[j].y - faces[j].width ||
-					faces[i].y - faces[i].width < faces[j].y + faces[j].width
-					)
+					faces[i].y - faces[i].width < faces[j].y + faces[j].width*/
+					//)
 
-					faces[j].width = -1;
+					//faces[j].width = -1;
 			}	// for(j)
 		}	// for(i)
 	}
@@ -235,8 +272,8 @@ void detectAndDisplay(Mat frame)
 	//座標取得
 	for( size_t i = 0; i < faces.size(); i++ )
 	{
-		printf("i=%d;\n", i);
-		printf("faces[i].x=%d\t\n", faces[i].x);
+		//printf("i=%d;\n", i);
+		//printf("faces[i].x=%d\t\n", faces[i].x);
 		Point pt1;
 		Point pt2;
 
@@ -327,6 +364,8 @@ void drawFace(cv::Mat image, vector<Rect> *faces, int flag)
 			case 1:
 				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
 
+				rectangle( image, Point(190, 93), Point(280, 190), Scalar(255, 0, 0), 1, 8, 0);
+
 				break;
 
 			case 2:
@@ -336,6 +375,8 @@ void drawFace(cv::Mat image, vector<Rect> *faces, int flag)
 				rectangle(image, pt1, pt2, CV_RGB(255, 255, 255), 3, 8, 0 );
 
 				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
+
+
 
 				// 番号の描画
 				putText(image, c_str, number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(0, 0, 255), 2, 8, 0);
