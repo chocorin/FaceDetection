@@ -34,7 +34,7 @@ int main( int argc, char* argv[] )
 	VideoCapture cap;
 	Mat frame;
 	int ImageMax = 48;
-
+	string fileName;
 	string WindowName = "Window - Face detection";
 
 /**-------- 検出器読み込み --------**/
@@ -48,42 +48,65 @@ if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading
 
 #if 1
 	// 静止画像読み込み
+	// 静止画像を格納しているディレクトリ名を指定
 	string DirectoryName = "img";
-	// ディレクトリ名からファイルリストを作成
-	vector<string> backfilelist = Dir::read(DirectoryName);
-	// 画像Noを指定しない場合（ディレクトリ内全ファイルの出力をする場合）は #if 1 とする
+	// ディレクトリ内のファイルを複数指定する場合はフラグ1、ファイル名を指定する場合はフラグ0
 	#if 0
-		// ファイル名出力
-		for(int i = 0; i < backfilelist.size(); i++) 
-	#else
-		// 静止画像No範囲指定
-		// 開始番号
-		int BeginNum = 47;
-		// 終了番号
-		int EndNum = 47;
-		// ファイル名出力
-		for(int i = BeginNum -1; i < EndNum; i++)
-	#endif
-		{
-			stringstream FilePath;
-			cout << backfilelist[i] << endl;
-			FilePath << DirectoryName << "\\" << backfilelist[i];
-			// （1）静止画像データをファイルから読み込む
-			frame = imread(FilePath.str(), IMREAD_COLOR);
-			//  失敗したらエラー表示
-			if(frame.empty()) {
-				cout << "Cannot open." << endl;
-				return -1;
+		// ディレクトリ名からファイルリストを作成
+		vector<string> backfilelist = Dir::read(DirectoryName);
+		// 画像範囲を指定しない場合（ディレクトリ内全ファイルの出力をする場合）はフラグ1とする
+		#if 1
+			// ファイル名出力
+			for(int i = 0; i < backfilelist.size(); i++) 
+		#else
+			// 静止画像No範囲指定
+			// 開始番号
+			//int BeginNum = 47;
+			int BeginNum = 48;
+			// 終了番号
+			//int EndNum = 47;
+			int EndNum = 79;
+			// ファイル名出力
+			for(int i = BeginNum -1; i < EndNum; i++)
+		#endif
+			{
+				stringstream FilePath;
+				cout << backfilelist[i] << endl;
+				FilePath << DirectoryName << "\\" << backfilelist[i];
+				// （1）静止画像データをファイルから読み込む
+				frame = imread(FilePath.str(), IMREAD_COLOR);
+				//  失敗したらエラー表示
+				if(frame.empty()) {
+					cout << "Cannot open." << endl;
+					return -1;
+				}
+				// （2）静止画像データの処理結果を表示する
+				detectAndDisplay(frame);
+				imshow(WindowName, frame);
+				waitKey(0);
 			}
-			// （2）静止画像データの処理結果を表示する
-			detectAndDisplay(frame);
-			imshow(WindowName, frame);
-			waitKey(0);
+	#else
+		fileName = "spe_2010_0127_obama00091.jpg";
+		//fileName = "out00996.jpg";
+		cout << fileName << endl;
+		stringstream FilePath;
+		FilePath << DirectoryName << "\\" <<  fileName;
+		// （1）静止画像データをファイルから読み込む
+		frame = imread(FilePath.str(), IMREAD_COLOR);
+		//  失敗したらエラー表示
+		if(frame.empty()) {
+			cout << "Cannot open." << endl;
+			return -1;
 		}
+		// （2）静止画像データの処理結果を表示する
+		detectAndDisplay(frame);
+		imshow(WindowName, frame);
+		waitKey(0);
+	#endif
+		
 
 #else
 	// 動画像読み込み
-	string fileName;
 	#if 1
 		fileName = "spe_2010_0127_obama_5.avi";
 	#else
@@ -167,6 +190,155 @@ void detectAndDisplay(Mat frame)
 					*/
 				//矩形範囲内に重複して検出した場合は太枠表示をしない
 				if(
+					#if 0
+					//見直しその３
+					//条件式見直し(2015/07/06)
+					//線の太さを考慮
+					//i基準
+					//1のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					//2のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					//3のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					//4のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y -2  >  faces[j].y -2 && faces[i].y -2 <= (faces[j].y + faces[j].height + 1) && (faces[i].y + faces[i].height + 1) > faces[j].y - 2 && (faces[i].y + faces[i].height +1 ) > (faces[j].y + faces[j].height + 1) ||
+					//5のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y-2 <=  faces[j].y-2 && faces[i].y-2 <= (faces[j].y + faces[j].height +1) && (faces[i].y + faces[i].height+1) > faces[j].y-2 && (faces[i].y + faces[i].height+1) <= (faces[j].y + faces[j].height+1) ||
+					//6のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					//7のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
+					//8のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
+					//9のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					//10のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
+					//11のパターン
+					//x軸
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
+					//12のパターン
+					//x軸
+					faces[i].x >  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					//13
+					//x軸
+					faces[i].x >  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
+					//14
+					//x軸
+					faces[i].x >  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
+					//y軸
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
+
+					//j基準
+					//1のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					//2のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					//3のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					//4のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y -2>  faces[i].y-2 && faces[j].y-2 <= (faces[i].y + faces[i].height +1) && (faces[j].y + faces[j].height +1) > faces[i].y-2 && (faces[j].y + faces[j].height +1) > (faces[i].y + faces[i].height+1) ||
+					//5のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y-2 <=  faces[i].y-2 && faces[j].y-2 <= (faces[i].y + faces[i].height+1) && (faces[j].y + faces[j].height+1 ) > faces[i].y-2 && (faces[j].y + faces[j].height+1) <= (faces[i].y + faces[i].height +1) ||
+					//6のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					//7のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
+					//8のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
+					//9のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					//10のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
+					//11のパターン
+					//x軸
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
+					//12のパターン
+					//x軸
+					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					//13
+					//x軸
+					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
+					//14
+					//x軸
+					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
+					//y軸
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) 
+
+					#else
 					//見直しその２
 					//条件式見直し(2015/06/25)
 					//i基準
@@ -311,8 +483,13 @@ void detectAndDisplay(Mat frame)
 					//x軸
 					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) 
-					////faces[i].x ==  faces[j].x || faces[i].x == (faces[j].x + faces[j].width -1) || (faces[i].x + faces[i].width - 1) == faces[j].x || (faces[i].x + faces[i].width - 1) == (faces[j].x + faces[j].width - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
+					
+					//座標一致の場合
+					faces[i].x ==  faces[j].x || faces[i].x == (faces[j].x + faces[j].width -1) || (faces[i].x + faces[i].width - 1) == faces[j].x || (faces[i].x + faces[i].width - 1) == (faces[j].x + faces[j].width - 1) ||
+					faces[i].y ==  faces[j].y || faces[i].y == (faces[j].y + faces[j].height -1) || (faces[i].y + faces[i].height - 1) == faces[j].y || (faces[i].y+ faces[i].height - 1) == (faces[j].y + faces[j].height - 1) 
+					
+					//旧条件式
 					//完全に重複した場合
 					//x軸
 					//faces[i].x <  faces[j].x //|| faces[j].x < faces[i].x + faces[i].width - 1 ||
@@ -332,6 +509,7 @@ void detectAndDisplay(Mat frame)
 					//faces[i].x - faces[i].width < faces[j].x + faces[j].width ||
 					//faces[i].y + faces[i].width > faces[j].y - faces[j].width ||
 					//faces[i].y - faces[i].width < faces[j].y + faces[j].width
+					#endif
 					)
 
 						faces[j].width = -1;
@@ -356,8 +534,8 @@ void detectAndDisplay(Mat frame)
 		Point profile_center( profiles[j].x + profiles[j].width/2, profiles[j].y + profiles[j].height/2 );
 
 		//楕円の描画
-		ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 5, 8, 0 );
-		ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 255, 255 ), 3, 8, 0 );
+		ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 3, 8, 0 );
+		ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 255, 255 ), 2, 8, 0 );
 		ellipse( frame, profile_center, Size( profiles[j].width/2, profiles[j].height/2), 0, 0, 360, Scalar( 255, 0, 0 ), 1, 8, 0 );
 
 		//数値から文字列に変換
@@ -365,7 +543,7 @@ void detectAndDisplay(Mat frame)
 		string num_str = to_string(j+1);
 
 		//番号の描画する場所
-		Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 60);
+		Point profile_number( profiles[j].x + profiles[j].width/2 + 20, profiles[j].y + profiles[j].height/2 - 40);
 
 		//番号の描画
 		putText( frame, num_str, profile_number, FONT_HERSHEY_SIMPLEX, 0.8, Scalar(255, 255, 0), 2, 8, 0);
@@ -394,7 +572,7 @@ void drawFace(cv::Mat image, vector<Rect> *faces, int flag)
 			sprintf(c_str, "%d", i+1);
  
 			//番号の描画する場所
-			Point number(faces->at(i).x + faces->at(i).width/2, faces->at(i).y + faces->at(i).height/2 - 60 );
+			Point number(faces->at(i).x + faces->at(i).width/2, faces->at(i).y + faces->at(i).height/2 - 40 );
 
 			switch (flag)
 			{
@@ -407,9 +585,9 @@ void drawFace(cv::Mat image, vector<Rect> *faces, int flag)
 
 			case 2:
 
-				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 5, 8, 0 );
+				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 3, 8, 0 );
 
-				rectangle(image, pt1, pt2, CV_RGB(255, 255, 255), 3, 8, 0 );
+				rectangle(image, pt1, pt2, CV_RGB(255, 255, 255), 2, 8, 0 );
 
 				rectangle(image, pt1, pt2, CV_RGB(255, 0, 255), 1, 8, 0 );
 
