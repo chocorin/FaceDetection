@@ -58,9 +58,9 @@ if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading
 	#else
 		// 静止画像No範囲指定
 		// 開始番号
-		int BeginNum = 13;
+		int BeginNum = 47;
 		// 終了番号
-		int EndNum = 13;
+		int EndNum = 47;
 		// ファイル名出力
 		for(int i = BeginNum -1; i < EndNum; i++)
 	#endif
@@ -172,146 +172,146 @@ void detectAndDisplay(Mat frame)
 					//i基準
 					//1のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//2のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//3のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//4のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//5のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 					//6のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//7のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 					//8のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 					//9のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//10のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x > (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) > (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 					//11のパターン
 					//x軸
-					faces[i].x <  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x <=  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 					//12のパターン
 					//x軸
-					faces[i].x >  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x >  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) > (faces[j].y + faces[j].height - 1) ||
 					//13
 					//x軸
-					faces[i].x >  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x >  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y <  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y <=  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 					//14
 					//x軸
-					faces[i].x >  faces[j].x && faces[i].x < (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) < (faces[j].x + faces[j].width - 1) &&
+					faces[i].x >  faces[j].x && faces[i].x <= (faces[j].x + faces[j].width -1) && (faces[i].x + faces[i].width - 1) > faces[j].x && (faces[i].x + faces[i].width - 1) <= (faces[j].x + faces[j].width - 1) &&
 					//y軸
-					faces[i].y >  faces[j].y && faces[i].y < (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) < (faces[j].y + faces[j].height - 1) ||
+					faces[i].y >  faces[j].y && faces[i].y <= (faces[j].y + faces[j].height -1) && (faces[i].y + faces[i].height - 1) > faces[j].y && (faces[i].y + faces[i].height - 1) <= (faces[j].y + faces[j].height - 1) ||
 
 					//j基準
 					//1のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//2のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//3のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//4のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//5のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
 					//6のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//7のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
 					//8のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
 					//9のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//10のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x > (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) > (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
 					//11のパターン
 					//x軸
-					faces[j].x <  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x <=  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
 					//12のパターン
 					//x軸
-					faces[j].x >  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) > (faces[i].y + faces[i].height - 1) ||
 					//13
 					//x軸
-					faces[j].x >  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y <  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) ||
+					faces[j].y <=  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) ||
 					//14
 					//x軸
-					faces[j].x >  faces[i].x && faces[j].x < (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) < (faces[i].x + faces[i].width - 1) &&
+					faces[j].x >  faces[i].x && faces[j].x <= (faces[i].x + faces[i].width -1) && (faces[j].x + faces[j].width - 1) > faces[i].x && (faces[j].x + faces[j].width - 1) <= (faces[i].x + faces[i].width - 1) &&
 					//y軸
-					faces[j].y >  faces[i].y && faces[j].y < (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) < (faces[i].y + faces[i].height - 1) 
+					faces[j].y >  faces[i].y && faces[j].y <= (faces[i].y + faces[i].height -1) && (faces[j].y + faces[j].height - 1) > faces[i].y && (faces[j].y + faces[j].height - 1) <= (faces[i].y + faces[i].height - 1) 
 					////faces[i].x ==  faces[j].x || faces[i].x == (faces[j].x + faces[j].width -1) || (faces[i].x + faces[i].width - 1) == faces[j].x || (faces[i].x + faces[i].width - 1) == (faces[j].x + faces[j].width - 1) ||
 					//完全に重複した場合
 					//x軸
