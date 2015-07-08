@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <fstream>
 
 #include "Dir.h"
 
@@ -52,6 +53,8 @@ if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading
 	string DirectoryName = "C:\\home\\komiya\\Head_pose_estimation\\movie\\president\\1_Obama\\sampling_30seconds\\spe_2010_0127_obama";
 	// 処理結果を格納するディレクトリ名を指定
 	string ResultDirectoryName = "C:\\home\\komiya\\Head_pose_estimation\\movie\\president\\1_Obama\\sampling_30seconds\\spe_2010_0127_obama\\result";
+	// ファイル名を出力するためのテキストファイル名を指定
+	ofstream outputfile("C:\\home\\komiya\\Head_pose_estimation\\movie\\president\\1_Obama\\sampling_30seconds\\spe_2010_0127_obama\\txt\\FileName.txt");
 	// ディレクトリ内のファイルを複数指定する場合はフラグ1、ファイル名を指定する場合はフラグ0
 	#if 1
 		// ディレクトリ名からファイルリストを作成
@@ -75,9 +78,9 @@ if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading
 				stringstream FilePath;
 				stringstream ResultFilePath;
 				cout << backfilelist[i] << endl;
+				outputfile << backfilelist[i] << endl;
 				FilePath << DirectoryName << "\\" << backfilelist[i];
 				ResultFilePath << ResultDirectoryName << "\\" << "result_" << backfilelist[i];
-				cout << ResultFilePath.str() << endl;
 				// （1）静止画像データをファイルから読み込む
 				frame = imread(FilePath.str(), IMREAD_COLOR);
 				//  失敗したらエラー表示
@@ -89,8 +92,9 @@ if( !profiles_cascade.load( profile_cascade_name ) ){ printf("--(!)Error loading
 				detectAndDisplay(frame);
 				imwrite(ResultFilePath.str(), frame);
 				imshow(WindowName, frame);
-				waitKey(100);
+				waitKey(1000);
 			}
+			outputfile.close();
 	#else
 		fileName = "spe_2010_0127_obama00004.jpg";
 		//fileName = "out00996.jpg";
